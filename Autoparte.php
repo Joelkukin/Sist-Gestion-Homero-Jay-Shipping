@@ -29,5 +29,28 @@ class Autoparte {
     
         $this->desgaste++;
     }
-}
+     // Getters
+     public function getNombre() {
+        return $this->nombre;
+    }
+
+    public function getDesgaste() {
+        return $this->desgaste;
+    }
+}   
+    // Crear instancia de prueba
+    $motor = new Autoparte("motor");
+
+    // Verificar nombre y desgaste
+    echo "Nombre: " . $motor->getNombre() . "\n";
+    echo "Desgaste: " . $motor->getDesgaste() . "\n";
+
+    // Usar la autopieza y verificar el desgaste
+    $motor->usar();
+    echo "Desgaste después de usar: " . $motor->getDesgaste() . "\n";
+
+    // Cambiar la autopieza y verificar el desgaste
+    $motor->cambiar();
+    echo "Desgaste después de cambiar: " . $motor->getDesgaste() . "\n";
+
 ?>
