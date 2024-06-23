@@ -1,16 +1,10 @@
-<?php #Lucas
-
-include_once "./VehiculoTercerizado.php";
-include_once "./VehiculoPropio.php";
-
+<?php #Lucas camion
 # testear en archivo a parte llamado test_clase.php
-
-class Camion { # hay que heredar de clase vehiculo con extends
-    private $vehiculoPropio;
-    private $vehiculoTercerizado;
+class Camion extends Vehiculo{ # hay que heredar de clase vehiculo con extends (lsito)
+   
     private $carga;
 
-    public function __construct($empresa, $matricula, $capacidad, $propio) {
+    public function __construct($empresa, $matricula, $capacidad, Boolean $propio) {
 
         #si propio es true, se agrega la propiedad autopartes y se crean sus instancias
         if($propio){
@@ -27,8 +21,7 @@ class Camion { # hay que heredar de clase vehiculo con extends
             );
         }
         # agregar instancias de  autopartes
-        $this->vehiculoPropio = new VehiculoPropio($empresa, $matricula, $capacidad, $autopartes); # quitar
-        $this->vehiculoTercerizado = new VehiculoTercerizado($empresa, $matricula, $capacidad); # quitar
+
         $this->carga = []; 
     }
 
