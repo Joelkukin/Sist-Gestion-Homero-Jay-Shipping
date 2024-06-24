@@ -67,7 +67,7 @@ class Direccion {
 }
 
 // Crear una instancia para comprobar funcionamiento
-$direccion = new Direccion("Av. Segurola", 123, "La Ciudad", "Buenos Aires", 01141, 'urbana');
+$direccion = new Direccion("Av. Siempreviva", 123, "La Ciudad", "Buenos Aires", 01414, 'urbana');
 
 // Mostrar la dirección completa
 $direccion->mostrarDireccion();

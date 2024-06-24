@@ -1,6 +1,5 @@
 <?php
-include_once "Autoparte.php";
-include_once "./utils.php";
+include_once "./autoparte.php";
 
 
 abstract class Vehiculo
@@ -30,7 +29,10 @@ abstract class Vehiculo
         return $this->capacidad;
     }
     function realizar_mantenimiento (){
-        return $this->empresa;
+        $autopartes = $this->autopartes->get_contenido();
+        foreach ($autopartes as $autoparte){
+            $autoparte->cambiar();
+        }
     }
 
     abstract function salir_a_reparto();

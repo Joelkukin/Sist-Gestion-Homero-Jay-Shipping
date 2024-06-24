@@ -52,11 +52,13 @@ class Producto{
          }
       }
       // crear una instancia de la clase Producto
-      $producto = new producto("helado1" , 10 , 3 ,true); //
-     
+      $producto = new producto("helado1" , 10 , 2 ,true); //
+
       // crear una instancia de la clase Producto
       $producto = new producto("helado2" , 5 , 3 ,true); //
       
+      // crear una instancia de la clase Producto
+      $producto = new producto("papa" , 2 , 25 ,false); //
       //mostrar información del producto
       $producto->mostrarInformación();
       
@@ -68,3 +70,4 @@ class Producto{
       $producto->mostrarinformación();
     
 ?>
+
