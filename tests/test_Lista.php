@@ -37,7 +37,11 @@
     echo json_encode($autopartes->reemplazar($autopartes->buscar("nombre", "freno",2), new Autoparte("frBrandstorm")), JSON_PRETTY_PRINT)."<br><br>";
     
     print_r("<h3>Metodo eliminar</h3>");
+    # typeof $arg = array
     echo json_encode($autopartes->eliminar($autopartes->buscar("nombre", "frBrandstorm")), JSON_PRETTY_PRINT)."<br>"; 
+    echo "<br>".json_encode($autopartes->eliminar([9,8]), JSON_PRETTY_PRINT)."<br>"; 
+    # typeof $arg = int
     echo "<br>".json_encode($autopartes->eliminar(9), JSON_PRETTY_PRINT)."<br>"; 
+    # typeof $arg = obj
     echo "<br>".json_encode($autopartes->eliminar(new Autoparte("motor")), JSON_PRETTY_PRINT)."<br>"; 
 ?>

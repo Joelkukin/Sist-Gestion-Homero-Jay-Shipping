@@ -14,20 +14,20 @@
         }
 
 
-        public function buscar($propiedad, $valor, $posicion = 0) {
+        public function buscar_propiedad(String $propiedad, $valor, $coincidencia_nro = 0) { // retorna array
             $resultados = []; // Array para almacenar los objetos encontrados
-    
-            foreach ($this->contenido as $indice=>$objeto) {
-                // Verifica si la propiedad existe en el objeto
-                if (property_exists($objeto, $propiedad)) {
-                    // Compara el valor de la propiedad con el valor buscado
-                    if ($objeto->$propiedad === $valor) {
-                        $resultados[] = [$indice, $objeto]; // Agrega el objeto al array de resultados
-                    }
+            foreach ($this->contenido as $objeto) {
+                if ($objeto->$propiedad == $valor){
+                    $resultados[] = $objeto;
                 }
+                return $resultados;
             }
-            if($posicion-1 >= 0){
-                return $resultados[$posicion-1];
+
+            
+            if($coincidencia_nro-1 < 0){
+                return $resultados;
+            }elseif($coincidencia_nro-1 >= 0){
+                return $resultados[$coincidencia_nro-1];
             }else{
                 if(count($resultados) == 1){
                     return $resultados[0]; // Devuelve el array con los objetos encontrados
@@ -37,43 +37,107 @@
             }
         }
 
-        function reemplazar ($objeto_viejo, $objeto_nuevo){
-            if(!is_array($objeto_viejo)){
-                $posicion = array_search($objeto_viejo, $this->contenido);
-            } else {
-                [$posicion, $objeto_viejo] = $objeto_viejo;
+        public function buscar_objeto(Object $objeto){ // retorna objeto
+            $primer_coincidencia = array_search($objeto, $this->contenido);
+            if($primer_coincidencia !== false){
+                return $primer_coincidencia;
+            }else{
+                return null;
+            }
+        }
+
+        function reemplazar (Array $objetos_viejos, Array $objetos_nuevos){ // retorna objetos reemplazados con éxito (...objects)
+            # obtengo los objetos a reemplazar con sus respectivos indices
+            $reemplazo = Array();
+            $objetos_viejos = array_intersect_assoc($objetos_viejos);
+            $lugares = array_keys($objetos_viejos);
+
+            # reemplazo cada objeto viejo con cada objeto nuevo en sus respectivos lugares
+            $i = 0;
+            foreach ($objetos_viejos as $lugar => $objeto_viejo) {
+                $reemplazo[$lugar] = $objetos_nuevos[$i];
+                $i++;
             }
 
-            if ($posicion !== false) {
-                $this->contenido[$posicion] = $objeto_nuevo;
-            }
-                
-            return $this->get_contenido();
+            $reemplazo = array_merge($reemplazo, array_diff(array_values($reemplazo),$objetos_nuevos));
+            
+            array_replace($this->contenido, $reemplazo);
         }
 
 
-        function eliminar ($objeto_a_eliminar){
-            switch (gettype($objeto_a_eliminar)) {
-                case 'array':
-                    [$posicion, $objeto_a_eliminar] = $objeto_a_eliminar;
-                    break;
-                
-                case 'integer':
-                    $posicion = $objeto_a_eliminar;
-                    break;
-                
-                case 'object':
-                    $posicion = array_search($objeto_a_eliminar, $this->contenido);
-                    break;
-                
-                default:
-                    # code...
-                    break;
+        function eliminar (...$objetivos){
+            $resultado = array();
+            foreach ($objetivos as $objetivo) {
+                switch (gettype($objetivo)) {
+                    case 'object':
+                        $this->contenido = array_diff($this->contenido, $objetivos);
+                        $resultado["resultado"][] = true;
+                        $resultado["objetivo"][] = $objetivo;
+                        break;
+                    
+                    case 'integer':
+                        unset($this->contenido[$objetivo]);
+                        $resultado["resultado"][] = true;
+                        $resultado["objetivo"][] = $objetivo;
+                        break;
+                    
+                    case 'string':
+                        unset($this->contenido[$objetivo]);
+                        $resultado["resultado"][] = true;
+                        $resultado["objetivo"][] = $objetivo;
+                        break;
+                        
+                    default:
+                        $resultado["resultado"][] = false;
+                        $resultado["objetivo"][] = $objetivo;
+                        break;
+                }
             }
-
-            unset($this->contenido[$posicion]);
-            return $this->get_contenido();
+            return $resultado;
         }
+    }
+    function test_lista(){
+        $autopartes = new Lista(
+            new Autoparte("motor"), 
+            new Autoparte("transmision"),
+            new Autoparte("rueda"),
+            new Autoparte("rueda"),
+            new Autoparte("rueda"),
+            new Autoparte("rueda"),
+            new Autoparte("chasis"),
+            new Autoparte("freno"),
+            new Autoparte("freno"),
+            new Autoparte("freno")
+        );
+    
+        
+    
+        
+        $freno = new Autoparte("freno");
+        $valor = "nombre";
+        $propiedad = "nombre";
+        var_dump($freno->$propiedad)."\n";
+        
+        print_r("<h3>Metodo ver</h3>");
+        echo json_encode($autopartes->ver(), JSON_PRETTY_PRINT)."<br>";
+        
+        print_r("<h3>Metodo agregar</h3>");
+        echo json_encode($autopartes->agregar(new Autoparte("freno")), JSON_PRETTY_PRINT)."<br>";
+        
+        print_r("<h3>Metodo buscar</h3>");
+        echo json_encode($autopartes->buscar("nombre", "freno"), JSON_PRETTY_PRINT)."<br>";
+    
+        print_r("<h3>Metodo reemplazar</h3>");
+        echo json_encode($autopartes->reemplazar($autopartes->buscar("nombre", "freno",2), new Autoparte("frBrandstorm")), JSON_PRETTY_PRINT)."<br><br>";
+        
+        print_r("<h3>Metodo eliminar</h3>");
+        # typeof $arg = array
+        echo json_encode($autopartes->eliminar($autopartes->buscar("nombre", "frBrandstorm")), JSON_PRETTY_PRINT)."<br>"; 
+        echo "<br>".json_encode($autopartes->eliminar([9,8]), JSON_PRETTY_PRINT)."<br>"; 
+        # typeof $arg = int
+        echo "<br>".json_encode($autopartes->eliminar(9), JSON_PRETTY_PRINT)."<br>"; 
+        # typeof $arg = obj
+        echo "<br>".json_encode($autopartes->eliminar(new Autoparte("motor")), JSON_PRETTY_PRINT)."<br>"; 
     }
     
 ?>

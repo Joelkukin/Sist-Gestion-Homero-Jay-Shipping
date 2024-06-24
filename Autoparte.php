@@ -1,10 +1,11 @@
 <?php
 
 class Autoparte {
-    private $nombre;
+    public $nombre;
     private $desgaste;
+    private $duracion;
 
-    public function __construct($nombre) {
+    public function __construct($nombre, $dias_de_duracion) {
         if (empty($nombre)) {
             throw new Exception("El nombre de la autopieza no puede estar vacío");
         }
@@ -14,7 +15,8 @@ class Autoparte {
         }
     
         $this->nombre = $nombre;
-        $this->desgaste = 0;
+        $this->desgaste = 0.0;
+        $this->duracion = $dias_de_duracion;
     }
     
     // Restaura el desgaste a 0 (como nuevo).
@@ -24,21 +26,28 @@ class Autoparte {
     // Aumenta el desgaste en 1.
     public function usar() {
         if ($this->desgaste < 0) {
+            throw new Exception("Pieza rota");
+        }
+        
+        $this->desgaste += (100 / $this->duracion);
+    }
+    public function realizar_mantenimiento() {
+        $eficiencia = 15;
+        if ($this->desgaste < 0) {
             throw new Exception("El desgaste de la autopieza no puede ser negativo");
         }
+        if($this->desgaste >= $eficiencia){
+            $this->desgaste - $eficiencia;
+        } else {
+            $this->desgaste = 0;
+        }
+    }
     
-        $this->desgaste++;
-    }
-     // Getters
-     public function getNombre() {
-        return $this->nombre;
-    }
-
-    public function getDesgaste() {
-        return $this->desgaste;
+    public function ver_desgaste() {
+        return round($this->desgaste)."%";
     }
 }   
-    // Crear instancia de prueba
+function test_Autoparte(){// Crear instancia de prueba
     $motor = new Autoparte("motor");
 
     // Verificar nombre y desgaste
@@ -51,6 +60,6 @@ class Autoparte {
 
     // Cambiar la autopieza y verificar el desgaste
     $motor->cambiar();
-    echo "Desgaste después de cambiar: " . $motor->getDesgaste() . "\n";
+    echo "Desgaste después de cambiar: " . $motor->getDesgaste() . "\n";}
 
 ?>

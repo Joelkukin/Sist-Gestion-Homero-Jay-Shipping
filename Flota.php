@@ -28,6 +28,6 @@ class Flota extends Lista {
   function get_nombre_empresa(){return $this->nombre_empresa;}
 }
 
-$flota = new Flota ("Homero Jay Shipping",[new Autoparte("motor")]);
-var_dump($flota->get_contenido());
+function test_flota(){$flota = new Flota ("Homero Jay Shipping",[new Autoparte("motor")]);
+var_dump($flota->get_contenido());}
 ?>

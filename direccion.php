@@ -10,12 +10,11 @@ class Direccion {
     public $tipoArea;
 
     // Constructor para iniciar la clase
-    function __construct($calle, $numero, $localidad, $provincia, $codigoPostal, $tipoArea) {
+    function __construct($calle, $numero, $localidad, $provincia, $tipoArea) {
         $this->calle = $calle;
         $this->numero = $numero;
         $this->localidad = $localidad;
         $this->provincia = $provincia;
-        $this->codigoPostal = $codigoPostal;
         $this->tipoArea = $tipoArea;
 
         // Validar datos al crear la instancia
@@ -44,20 +43,17 @@ class Direccion {
             throw new Exception("La provincia no puede estar vacía");
         }
 
-        // Validar código postal (formato numérico de 5 dígitos)
-        if (!is_numeric($this->codigoPostal) || strlen($this->codigoPostal) != 5) {
-            throw new Exception("El código postal debe ser un número de 5 dígitos");
-        }
+    
 
         // Validar tipoArea (debe ser "rural" o "urbana")
-        if ($this->tipoArea != "rural" && $this->tipoArea != "urbana") {
-            throw new Exception("El tipo de área debe ser 'rural' o 'urbana'");
+        if ($this->tipoArea != "larga distancia" && $this->tipoArea != "urbana") {
+            throw new Exception("El tipo de área debe ser 'larga distancia' o 'urbana'");
         }
     }
 
     // Método para obtener la dirección completa
     function getDireccionCompleta() {
-        return $this->calle . " " . $this->numero . ", " . $this->localidad . ", " . $this->provincia . ", " . $this->codigoPostal . " (" . $this->tipoArea . ")";
+        return $this->calle . " " . $this->numero . ", " . $this->localidad . ", " . $this->provincia . ", (" . $this->tipoArea . ")";
     }
 
     // Método para mostrar la dirección completa por pantalla
@@ -66,10 +62,10 @@ class Direccion {
     }
 }
 
-// Crear una instancia para comprobar funcionamiento
-$direccion = new Direccion("Av. Siempreviva", 123, "La Ciudad", "Buenos Aires", 01414, 'urbana');
+function test_direccion() {// Crear una instancia para comprobar funcionamiento
+$direccion = new Direccion("Av. Siempreviva", 123, "La Ciudad", "Buenos Aires", 'urbana');
 
 // Mostrar la dirección completa
-$direccion->mostrarDireccion();
+$direccion->mostrarDireccion();}
 
 ?>

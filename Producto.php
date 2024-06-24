@@ -51,7 +51,7 @@ class Producto{
 
          }
       }
-      // crear una instancia de la clase Producto
+      function test_producto(){// crear una instancia de la clase Producto
       $producto = new producto("helado1" , 10 , 2 ,true); //
 
       // crear una instancia de la clase Producto
@@ -67,7 +67,7 @@ class Producto{
 
       //mostrar información actualizada del producto 
       echo "<br>información actualizada despues de agregar : <br>";
-      $producto->mostrarinformación();
+      $producto->mostrarinformación();}
     
 ?>
 
