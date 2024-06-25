@@ -9,8 +9,8 @@
         }
 
         function agregar($elemento){
-            array_push($this->contenido, $elemento);
-            return $this->get_contenido();
+            $this->contenido []= $elemento;
+            return array_search($elemento, $this->contenido);
         }
 
 
@@ -37,13 +37,17 @@
             }
         }
 
-        public function buscar_objeto(Object $objeto){ // retorna objeto
-            $primer_coincidencia = array_search($objeto, $this->contenido);
-            if($primer_coincidencia !== false){
-                return $primer_coincidencia;
-            }else{
-                return null;
-            }
+        public function buscar_objeto(...$objetos){ // retorna objeto
+            return array_intersect_assoc($this->contenido, $objetos);
+            /* $resultado = array();
+            foreach ($objetos as $objeto) {
+                $primer_coincidencia = array_search($objetos, $this->contenido);
+                if($primer_coincidencia !== false){
+                    $resultado []=$primer_coincidencia;
+                }else{
+                    return null;
+                }
+            } */
         }
 
         function reemplazar (Array $objetos_viejos, Array $objetos_nuevos){ // retorna objetos reemplazados con éxito (...objects)

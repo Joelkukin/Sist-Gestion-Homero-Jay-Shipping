@@ -6,14 +6,14 @@ include_once "./Lista.php" ;
 class Carga extends Lista{
     public $productos; // Array de productos
     private $peso_total = 0; // Suma de los pesos totales de los productos
-    public $refrigerado; 
+    public $es_refrigerado; 
     
     function __construct(Producto ...$productos) {
         foreach ($productos as $producto) {
             $this->peso_total += $producto->peso_total;
             $this->contenido[] = $producto;
-            if($producto->refrigerado){
-                $this->refrigerado = true;
+            if($producto->es_refrigerado){
+                $this->es_refrigerado = true;
             }
         }
         $this->productos = $this->contenido;
@@ -57,5 +57,5 @@ $carga = new Carga(
 //$carga->mostrar_informacion();
 print_r($carga->productos); print_r( "<br><br>" );
 print_r($carga->peso_total); print_r( "<br><br>" );
-print_r($carga->refrigerado); print_r( "<br><br>" );}
+print_r($carga->es_refrigerado); print_r( "<br><br>" );}
 ?>

@@ -1,33 +1,65 @@
 <?php
 include_once "./Lista.php";
 include_once "./Vehiculo.php";
-include_once "./VehiculoPropio.php";
-include_once "./VehiculoTercerizado.php";
+include_once "./Camion.php";
+include_once "./Utilitario.php";
 include_once "./Autoparte.php";
+include_once "./utils.php";
 
-class Flota extends Lista {
+class Flota extends Lista{
   public $nombre_empresa;
-  public $vehiculos_propios;
-  public $vehiculos_tercerizados;
-  function __construct($nombre_empresa, Array $vehiculos_propios){
+  function __construct($nombre_empresa){
     $this->nombre = $nombre_empresa;
-    parent::__construct($vehiculos_propios);
   }
   
-  function get_vehiculos(){$this->get_contenido();}
-  
+  function get_vehiculos(){return $this->get_contenido();}
+
   function comprar(Vehiculo ...$vehiculos){
-    
+    $result=[];
+    foreach ($vehiculos as $vehiculo) {
+      # validar si es propio
+      if(!$vehiculo->es_propio){$vehiculo->es_propio = true;}
+      
+      $result []= $this->agregar($vehiculo);
     }
+
+    return $result;
+  }
   
-  function contratar(){
-    $this->agregar();
+  function contratar(Vehiculo ...$vehiculos){
     
+    foreach ($vehiculos as $vehiculo) {
+      # validar si es propio
+      if($vehiculo->es_propio){$vehiculo->es_propio = false;}
+      
+      $this->agregar($vehiculo);
+    }
   }
 
   function get_nombre_empresa(){return $this->nombre_empresa;}
 }
 
-function test_flota(){$flota = new Flota ("Homero Jay Shipping",[new Autoparte("motor")]);
-var_dump($flota->get_contenido());}
+function test_flota(){
+  echo "<h3>Test Clase Flota</h3>";
+  $flota = new Flota ("Homero Jay Shipping");
+
+  var_dump("comprar: ");
+  
+  var_dump($flota->comprar(
+    new Camion("Homero Jay Shipping", "SIM123", 12000, true),
+    new Camion("Homero Jay Shipping", "SIN123", 12000, true, true),
+    new Utilitario("Homero Jay Shipping", "SIM124", 12000, false)
+  ));
+  
+  var_dump("contratar: ");
+  var_dump($flota->contratar(new Utilitario("Homero Jay Shipping", "REF124", 12000, false, true)));
+  
+  var_dump("get_vehiculos: ");
+  var_dump($flota->get_vehiculos());
+ 
+  var_dump("get_nombre_empresa: ");
+  var_dump($flota->get_nombre_empresa());
+
+}
+test_flota();
 ?>

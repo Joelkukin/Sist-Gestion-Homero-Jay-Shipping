@@ -4,21 +4,20 @@ include_once "./Vehiculo.php";
 include_once "./Lista.php";
 include_once "./Direccion.php";
 include_once "./Carga.php";
+include_once "./utils.php";
 
 class Utilitario extends Vehiculo {
 
     public $ruta;
     public $autopartes;
 
-    function __construct($empresa, $matricula, $capacidad, $propio = false) {
-        parent::__construct($empresa, $matricula, $capacidad, $propio);
+    function __construct($empresa, $matricula, $capacidad, $es_propio = false, $es_refrigerado = false) {
+        parent::__construct($empresa, $matricula, $capacidad, $es_propio, $es_refrigerado, "urbana");
 
-        $this->empresa = $empresa;
-        $this->matricula = $matricula;
-        $this->capacidad = $capacidad;
-        $this->propio = $propio;
         # relacion de composicion con clase autopartes
-        if($propio){
+        echo "es_propio: ";
+        var_dump($es_propio);
+        if($es_propio){
             $this->autopartes = new Lista(
                 new Autoparte("chasis", 365*15),
                 new Autoparte("motor", 365*5),
@@ -30,11 +29,9 @@ class Utilitario extends Vehiculo {
                 new Autoparte("furgon", 365*5)
             );
         }
+        
     }
 
-    # get capacidad está en la clase padre como ver_capacidad
-
-    # su superclase está en español, por lo tanto su subclase tambien debe estar en español
     public function ver_autopartes() { 
         return $this->autopartes;
     }
@@ -49,7 +46,7 @@ class Utilitario extends Vehiculo {
 
     public function salir_a_reparto() {
         $this->ruta = null;
-        $this->carga;
+        $this->carga = null;
         foreach($this->autopartes as $autoparte){
             $this->autoparte->usar();
         }
@@ -60,17 +57,23 @@ class Utilitario extends Vehiculo {
     }
 
     public function realizar_mantenimiento() {
-        $autopartes_a_cuidar = Array();
-        array_merge($autopartes_a_cuidar,$this->autopartes->buscar_propiedad("nombre", "rueda"));
-        $autopartes_a_cuidar[] = $this->autopartes->buscar_propiedad("nombre", "furgon");
-        $autopartes_a_cuidar[] = $this->autopartes->buscar_propiedad("nombre", "motor");
+        
+
+        foreach ($this->autopartes as $autoparte) {
+            
+            var_dump("viendo autoparte de metodo 'realizar_mantenimiento'(): ", $autoparte);
+            $autoparte->realizar_mantenimiento();
+        }
         return true;
     }
 }
 
 function test_utilitario(){
-    $coche = new Utilitario("Homero Jay Shipping", "HEX621", 500, true);
+    echo "<h3>Test Clase Utilitario</h3>";
+
+    $coche = new Utilitario("Homero Jay Shipping", "HEX621", 500, true, true);
     
+    var_dump("es_propio: ",$coche->es_propio);
     var_dump("ver_autopartes: ",$coche->ver_autopartes());
     echo "<br><br>";
     var_dump("ver_empresa: ", $coche->empresa);
@@ -94,11 +97,13 @@ function test_utilitario(){
     )));
     echo "<br><br>";
     var_dump("asignar_ruta: ",$coche->asignar_ruta(
-        new Direccion("Gral. Güemes", 503, "san isidro", "buenos Aires", "urbana"),
-        new Direccion("Gral. Justo José de Urquiza", 425, "san isidro", "buenos Aires", "urbana"),
-        new Direccion("Peru", 365, "san isidro", "buenos Aires", "urbana"),
-        new Direccion("Echeverria", 93, "san isidro", "buenos Aires", "urbana"),
-        new Direccion("Rafael Obligado", 7823, "san isidro", "buenos Aires", "urbana")
+        new Ruta("urbana",
+            new Direccion("Gral. Güemes", 503, "san isidro", "buenos Aires", "urbana"),
+            new Direccion("Gral. Justo José de Urquiza", 425, "san isidro", "buenos Aires", "urbana"),
+            new Direccion("Peru", 365, "san isidro", "buenos Aires", "urbana"),
+            new Direccion("Echeverria", 93, "san isidro", "buenos Aires", "urbana"),
+            new Direccion("Rafael Obligado", 7823, "san isidro", "buenos Aires", "urbana")
+        )
     ));
     echo "<br><br>";
     var_dump("salir_a_reparto: ",$coche->salir_a_reparto());
@@ -106,3 +111,4 @@ function test_utilitario(){
     var_dump("realizar_mantenimiento: ",$coche->realizar_mantenimiento());
     echo "<br><br>";
 }
+test_utilitario();

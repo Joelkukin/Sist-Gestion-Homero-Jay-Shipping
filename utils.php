@@ -23,4 +23,26 @@ console_log("Este es un mensaje de prueba");
     }
 }
 
+/* function ver_objeto(Object $objeto){
+    $html = "";
+    $headers;
+    $filas;
+
+    foreach( $objeto as $key => $value){
+        $html .= "<tr><td>$key</td><td>$value</td></tr>";
+    }
+    
+    $html = "
+    <table>
+        <thead>
+            <th>Propiedad</th><th>Valor</th>
+        </thead>
+        <tbody>
+            ".$filas."
+        </tbody>
+    </table>
+    ";
+    return $html;
+} */
+
 ?>

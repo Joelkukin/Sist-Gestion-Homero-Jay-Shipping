@@ -4,21 +4,18 @@ include_once "./Vehiculo.php";
 include_once "./Lista.php";
 include_once "./Direccion.php";
 include_once "./Carga.php";
+include_once "./utils.php";
 
 class Camion extends Vehiculo {
 
     public $ruta;
     public $autopartes;
 
-    function __construct($empresa, $matricula, $capacidad, $propio = false) {
-        parent::__construct($empresa, $matricula, $capacidad, $propio);
+    function __construct($empresa, $matricula, $capacidad, $es_propio = false, $es_refrigerado = false) {
+        parent::__construct($empresa, $matricula, $capacidad, $es_propio = false, $es_refrigerado = false, "larga distancia");
 
-        $this->empresa = $empresa;
-        $this->matricula = $matricula;
-        $this->capacidad = $capacidad;
-        $this->propio = $propio;
         # relacion de composicion con clase autopartes
-        if($propio){
+        if($this->es_propio){
             $this->autopartes = new Lista(
                 new Autoparte("chasis", 365*15),
                 new Autoparte("motor", 365*10),
@@ -73,7 +70,8 @@ class Camion extends Vehiculo {
 }
 
 function test_camion(){
-    $camion = new Camion("Homero Jay Shipping", "HEX621", 500, true);
+    echo "<h3>Test Clase Camion</h3>";
+    $camion = new Camion("Homero Jay Shipping", "HEX621", 500, true, true);
     
     var_dump("ver_autopartes: ",$camion->ver_autopartes());
     echo "<br><br>";
@@ -110,3 +108,4 @@ function test_camion(){
     var_dump("realizar_mantenimiento: ",$camion->realizar_mantenimiento());
     echo "<br><br>";
 }
+?>

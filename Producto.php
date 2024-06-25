@@ -6,15 +6,14 @@ class Producto{
     public $cantidad;
     public $peso_unitario;
     public $peso_total;
-    public $unidad_de_medida;
-    public $refrigerado;
+    public $es_refrigerado;
     
     //constructor para iniciar la clase
-    function __construct($nombre, $cantidad, $peso_unitario, $refrigerado) {
+    function __construct($nombre, $cantidad, $peso_unitario, $es_refrigerado) {
        $this ->nombre = $nombre;
        $this ->cantidad = $cantidad;
        $this -> peso_unitario = $peso_unitario;
-       $this -> refrigerado = $refrigerado;
+       $this -> es_refrigerado = $es_refrigerado;
        $this -> peso_total = $peso_unitario * $cantidad;
 
     }
@@ -40,7 +39,7 @@ class Producto{
 
          //método para obtener el estado de refrigeración
          function get_refrigerado() {
-           return $this -> refrigerado ? "SI" : "NO";
+           return $this -> es_refrigerado ? "SI" : "NO";
          }
          
          // método para mostrar información del producto
