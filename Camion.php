@@ -12,30 +12,24 @@ class Camion extends Vehiculo {
     public $autopartes;
 
     function __construct($empresa, $matricula, $capacidad, $es_propio = false, $es_refrigerado = false) {
-        parent::__construct($empresa, $matricula, $capacidad, $es_propio = false, $es_refrigerado = false, "larga distancia");
+        parent::__construct($empresa, $matricula, $capacidad, $es_propio, $es_refrigerado, "urbana");
 
-        # relacion de composicion con clase autopartes
-        if($this->es_propio){
+        # relacion de composicion con clase autoparte 
+        if($es_propio){
             $this->autopartes = new Lista(
                 new Autoparte("chasis", 365*15),
-                new Autoparte("motor", 365*10),
+                new Autoparte("motor", 365*5),
                 new Autoparte("rueda del izq", 365*2),
                 new Autoparte("rueda del der", 365*2),
                 new Autoparte("rueda tra izq", 365*2),
                 new Autoparte("rueda tra der", 365*2),
-                new Autoparte("rueda 1 trailer izq", 365*2),
-                new Autoparte("rueda 1 trailer der", 365*2),
-                new Autoparte("rueda 2 trailer izq", 365*2),
-                new Autoparte("rueda 2 trailer der", 365*2),
                 new Autoparte("carroceria", 365*7),
-                new Autoparte("container", 365*15)
+                new Autoparte("furgon", 365*5)
             );
         }
+        
     }
 
-    # get capacidad está en la clase padre como ver_capacidad
-
-    # su superclase está en español, por lo tanto su subclase tambien debe estar en español
     public function ver_autopartes() { 
         return $this->autopartes;
     }
@@ -50,7 +44,7 @@ class Camion extends Vehiculo {
 
     public function salir_a_reparto() {
         $this->ruta = null;
-        $this->carga;
+        $this->carga = null;
         foreach($this->autopartes as $autoparte){
             $this->autoparte->usar();
         }
@@ -61,51 +55,58 @@ class Camion extends Vehiculo {
     }
 
     public function realizar_mantenimiento() {
-        $autopartes_a_cuidar = Array();
-        array_merge($autopartes_a_cuidar,$this->autopartes->buscar_propiedad("nombre", "rueda"));
-        $autopartes_a_cuidar[] = $this->autopartes->buscar_propiedad("nombre", "furgon");
-        $autopartes_a_cuidar[] = $this->autopartes->buscar_propiedad("nombre", "motor");
+        
+
+        foreach ($this->autopartes as $autoparte) {
+            
+            var_dump("viendo autoparte de metodo 'realizar_mantenimiento'(): ", $autoparte);
+            $autoparte->realizar_mantenimiento();
+        }
         return true;
     }
 }
 
 function test_camion(){
     echo "<h3>Test Clase Camion</h3>";
-    $camion = new Camion("Homero Jay Shipping", "HEX621", 500, true, true);
+
+    $coche = new Camion("Homero Jay Shipping", "HEX621", 10000, true, true);
     
-    var_dump("ver_autopartes: ",$camion->ver_autopartes());
+    var_dump("<h4>es_propio: </h4>",$coche->es_propio);
+    var_dump("ver_autopartes: </h4>",$coche->ver_autopartes());
     echo "<br><br>";
-    var_dump("ver_empresa: ", $camion->empresa);
+    var_dump("<h4>ver_empresa: </h4>", $coche->empresa);
     echo "<br><br>";
-    var_dump("ver_matricula: ",$camion->ver_matricula());
+    var_dump("<h4>ver_matricula: </h4>",$coche->ver_matricula());
     echo "<br><br>";
-    var_dump("ver_capacidad: ",$camion->ver_capacidad());
+    var_dump("<h4>ver_capacidad: </h4>",$coche->ver_capacidad());
     echo "<br><br>";
-    var_dump("realizar_mantenimiento: ",$camion->realizar_mantenimiento ());
+    var_dump("<h4>realizar_mantenimiento: </h4>",$coche->realizar_mantenimiento ());
     echo "<br><br>";
-    var_dump("agregar_autopartes: ",$camion->agregar_autopartes(new Autoparte("baulera", 1000)));
+    var_dump("<h4>agregar_autopartes: </h4>",$coche->agregar_autopartes(new Autoparte("baulera", 1000)));
     echo "<br><br>";
-    var_dump("eliminar_autopartes: ",$camion->eliminar_autopartes(new Autoparte("baulera", 1000)));
+    var_dump("<h4>eliminar_autopartes: </h4>",$coche->eliminar_autopartes(new Autoparte("baulera", 1000)));
     echo "<br><br>";
-    var_dump("asignar_carga: ",$camion->asignar_carga(new Carga(
-        new Producto("alfajores", 48000, 2, false),
-        new Producto("chocolate", 48000, 2, true),
-        new Producto("bombones", 48000, 2, true),
-        new Producto("frasco de caramelos", 48000, 2, false),
-        new Producto("torta", 48000, 2, true),
+    var_dump("<h4>asignar_carga: </h4>",$coche->asignar_carga(new Carga(
+        new Producto("alfajores", 48, 2, false),
+        new Producto("chocolate", 48, 2, true),
+        new Producto("bombones", 48, 2, true),
+        new Producto("frasco de caramelos", 48, 2, false),
+        new Producto("torta", 48, 2, true),
     )));
     echo "<br><br>";
-    var_dump("asignar_ruta: ",$camion->asignar_ruta(
-        new Direccion("Gral. Güemes", 503, "san isidro", "buenos Aires", "urbana"),
-        new Direccion("Gral. Justo José de Urquiza", 425, "san isidro", "buenos Aires", "urbana"),
-        new Direccion("Peru", 365, "san isidro", "buenos Aires", "urbana"),
-        new Direccion("Echeverria", 93, "san isidro", "buenos Aires", "urbana"),
-        new Direccion("Rafael Obligado", 7823, "san isidro", "buenos Aires", "urbana")
+    var_dump("<h4>asignar_ruta: </h4> ",$coche->asignar_ruta(
+        new Ruta("larga distancia",
+            new Direccion("Gral. Güemes", 503, "san isidro", "buenos Aires", "larga distancia"),
+            new Direccion("Gral. Justo José de Urquiza", 425, "san isidro", "buenos Aires", "larga distancia"),
+            new Direccion("Peru", 365, "san isidro", "buenos Aires", "larga distancia"),
+            new Direccion("Echeverria", 93, "san isidro", "buenos Aires", "larga distancia"),
+            new Direccion("Rafael Obligado", 7823, "san isidro", "buenos Aires", "larga distancia")
+        )
     ));
     echo "<br><br>";
-    var_dump("salir_a_reparto: ",$camion->salir_a_reparto());
+    var_dump("<h4>salir_a_reparto: </h4>",$coche->salir_a_reparto());
     echo "<br><br>";
-    var_dump("realizar_mantenimiento: ",$camion->realizar_mantenimiento());
+    var_dump("<h4></h4>realizar_mantenimiento: </h4>",$coche->realizar_mantenimiento());
     echo "<br><br>";
 }
-?>
+test_camion();
